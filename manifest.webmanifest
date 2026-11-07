@@ -1,0 +1,18 @@
+{
+  "id": "./",
+  "name": "M.I.n.D.S",
+  "short_name": "M.I.n.D.S",
+  "description": "Mood Intervention and Detection for Students",
+  "lang": "ms",
+  "start_url": "./?source=app",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "any",
+  "background_color": "#EEF2EF",
+  "theme_color": "#1F3A3D",
+  "icons": [
+    { "src": "icons/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "icons/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "icons/icon-maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ]
+}

@@ -1,0 +1,176 @@
+<!doctype html>
+<html lang="ms">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>M.I.n.D.S</title>
+<meta name="description" content="Mood Intervention and Detection for Students">
+<meta name="theme-color" content="#1F3A3D">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="M.I.n.D.S">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" type="image/png" href="icons/favicon-32.png">
+<link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Nunito+Sans:wght@400;600;700;800;900&display=swap">
+<style>
+:root{--bg:#EEF2EF;--surface:#FBFCFA;--surface-2:#E3EAE5;--line:#CBD6CF;--ink:#1F3A3D;--muted:#566B69;--accent:#B5541F;--on-accent:#fff;--logo-chip:#FBFCFA}
+@media (prefers-color-scheme:dark){:root{--bg:#121C1D;--surface:#1A2627;--surface-2:#223132;--line:#33474A;--ink:#E6EEEA;--muted:#A3B5B2;--accent:#F0A56E;--on-accent:#1F1208}}
+*{box-sizing:border-box}
+html,body{margin:0}
+body{min-height:100vh;min-height:100dvh;background:var(--bg);color:var(--ink);font:400 16px/1.5 'Nunito Sans',system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:calc(16px + env(safe-area-inset-top)) 16px calc(16px + env(safe-area-inset-bottom))}
+main{width:100%;max-width:440px;background:var(--surface);border:1px solid var(--line);border-radius:20px;padding:28px 24px;text-align:center}
+.lang{display:flex;justify-content:flex-end;gap:2px;margin:-10px -8px 6px}
+.lang button{border:0;background:transparent;color:var(--muted);font:800 13px 'Nunito Sans',system-ui,sans-serif;padding:8px 10px;border-radius:999px;cursor:pointer;min-height:36px}
+.lang button[aria-pressed="true"]{background:var(--surface-2);color:var(--ink)}
+.chip{display:inline-block;background:var(--logo-chip);border-radius:18px;padding:10px 12px;line-height:0}
+.chip img{width:96px;height:auto;display:block}
+h1{font-size:34px;font-weight:900;letter-spacing:.01em;margin:12px 0 2px;line-height:1.1}
+h1 span{color:#E07A3C}
+.tag{color:var(--muted);margin:0 0 20px;font-size:14.5px}
+.btn{display:block;width:100%;min-height:52px;padding:14px 18px;border-radius:14px;border:1.5px solid transparent;font:800 17px 'Nunito Sans',system-ui,sans-serif;text-decoration:none;cursor:pointer;text-align:center}
+.btn.primary{background:var(--accent);color:var(--on-accent)}
+.btn.soft{background:var(--surface-2);color:var(--ink);border-color:var(--line);margin-top:10px}
+.btn:focus-visible,.lang button:focus-visible{outline:3px solid var(--ink);outline-offset:2px}
+.steps{text-align:left;background:var(--surface-2);border-radius:14px;padding:14px 16px;margin:0 0 4px}
+.steps h2{font-size:15px;font-weight:800;margin:0 0 6px}
+.steps ol{margin:0;padding-left:22px}
+.steps li{margin:3px 0}
+.steps p{margin:8px 0 0;font-size:13.5px;color:var(--muted)}
+.note{color:var(--muted);font-size:14px;margin:12px 0 0}
+.msg{background:var(--surface-2);border-radius:14px;padding:12px 14px;margin:0 0 12px;font-weight:700}
+.qr{display:none;margin-top:18px;border-top:1px solid var(--line);padding-top:16px}
+.qr img{width:150px;height:150px;display:block;margin:0 auto 6px;background:#fff;padding:6px;border-radius:10px}
+.qr p{margin:0;font-size:14px;color:var(--muted)}
+@media (min-width:760px) and (hover:hover){.qr{display:block}}
+[hidden]{display:none!important}
+</style>
+</head>
+<body>
+<main>
+  <div class="lang" role="group" aria-label="Bahasa / Language">
+    <button type="button" data-lang="ms" aria-pressed="true">BM</button>
+    <button type="button" data-lang="en" aria-pressed="false">EN</button>
+  </div>
+  <div class="chip"><img src="icons/logo.svg" alt="" width="96" height="82"></div>
+  <h1 aria-label="M.I.n.D.S">M<span>.</span>I<span>.</span>n<span>.</span>D<span>.</span>S</h1>
+  <p class="tag">Mood Intervention and Detection for Students</p>
+
+  <p class="msg" id="msg" role="status" hidden></p>
+  <div id="installArea">
+    <button class="btn primary" type="button" id="installBtn" hidden></button>
+    <div class="steps" id="steps" hidden>
+      <h2 id="stepsTitle"></h2>
+      <ol id="stepsList"></ol>
+      <p id="stepsNote"></p>
+    </div>
+  </div>
+  <a class="btn soft" id="openBtn" href="#"></a>
+  <p class="note" id="note"></p>
+  <div class="qr" id="qr"><img src="icons/qr.png" alt="" width="150" height="150"><p id="qrText"></p></div>
+  <noscript><p class="msg">Sila hidupkan JavaScript. / Please turn on JavaScript.</p></noscript>
+</main>
+<script src="config.js"></script>
+<script>
+(function () {
+  var TEXT = {
+    ms: {
+      install: 'Pasang aplikasi', open: 'Buka tanpa memasang', openApp: 'Buka M.I.n.D.S', note: 'Perlukan internet. Jawapan tidak disimpan pada telefon ini.',
+      qr: 'Imbas dengan kamera telefon untuk memasang.', installed: 'Sudah dipasang. Buka M.I.n.D.S dari skrin utama.', opening: 'Membuka M.I.n.D.S…',
+      offline: 'Tiada internet. Sambungkan telefon ke internet, kemudian cuba lagi.', retry: 'Cuba lagi', stepsTitle: 'Tambah ke skrin utama', stepsTitlePc: 'Pasang pada komputer ini',
+      ios: ['Tekan butang <b>Kongsi</b> (petak dengan anak panah ke atas).', 'Pilih <b>Tambah ke Skrin Utama</b>. Jika tiada, tatal ke bawah atau tekan <b>Lihat Lagi</b>.', 'Tekan <b>Tambah</b>.'],
+      android: ['Tekan menu <b>⋮</b> di penjuru atas.', 'Pilih <b>Pasang aplikasi</b> atau <b>Tambah ke skrin utama</b>.', 'Tekan <b>Pasang</b> atau <b>Tambah</b>.'],
+      desktop: ['Dalam Chrome atau Edge, tekan ikon pasang pada bar alamat, atau buka menu pelayar.', 'Pilih <b>Pasang M.I.n.D.S</b>.'],
+      stepsNote: 'Pilihan ini tiada? Buka pautan ini dalam Chrome atau Safari, bukan di dalam WhatsApp atau Telegram.'
+    },
+    en: {
+      install: 'Install the app', open: 'Open without installing', openApp: 'Open M.I.n.D.S', note: 'Needs internet. Answers are not stored on this phone.',
+      qr: 'Scan with a phone camera to install.', installed: 'Installed. Open M.I.n.D.S from your home screen.', opening: 'Opening M.I.n.D.S…',
+      offline: 'No internet. Connect this phone to the internet, then try again.', retry: 'Try again', stepsTitle: 'Add to home screen', stepsTitlePc: 'Install on this computer',
+      ios: ['Tap the <b>Share</b> button (the square with an upward arrow).', 'Choose <b>Add to Home Screen</b>. If it is not there, scroll down or tap <b>View More</b>.', 'Tap <b>Add</b>.'],
+      android: ['Tap the <b>⋮</b> menu in the top corner.', 'Choose <b>Install app</b> or <b>Add to Home screen</b>.', 'Tap <b>Install</b> or <b>Add</b>.'],
+      desktop: ['In Chrome or Edge, click the install icon in the address bar, or open the browser menu.', 'Choose <b>Install M.I.n.D.S</b>.'],
+      stepsNote: 'Option not there? Open this link in Chrome or Safari, not inside WhatsApp or Telegram.'
+    }
+  };
+  var APP_URL = window.MINDS_APP_URL;
+  var $ = function (id) { return document.getElementById(id); };
+  var store = {
+    get: function (s, k) { try { return s.getItem(k); } catch (e) { return null; } },
+    set: function (s, k, v) { try { s.setItem(k, v); } catch (e) {} }
+  };
+  var ls = null, ss = null;
+  try { ls = window.localStorage; ss = window.sessionStorage; } catch (e) {}
+  var lang = (ls && store.get(ls, 'minds-lang')) || 'ms';
+  if (!TEXT[lang]) lang = 'ms';
+  var installPrompt = null, justInstalled = false;
+  var ua = navigator.userAgent;
+  var isIOS = /iPhone|iPad|iPod/.test(ua) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+  var isAndroid = /Android/.test(ua);
+  var isApp = (window.matchMedia && window.matchMedia('(display-mode: standalone)').matches) || window.navigator.standalone === true;
+
+  function render() {
+    var L = TEXT[lang], online = navigator.onLine !== false;
+    document.documentElement.lang = lang;
+    document.querySelectorAll('.lang button').forEach(function (b) { b.setAttribute('aria-pressed', String(b.dataset.lang === lang)); });
+    $('note').textContent = L.note;
+    $('qrText').textContent = L.qr;
+    $('installArea').hidden = isApp || !online;
+    $('qr').hidden = isApp;
+    var open = $('openBtn');
+    open.href = online ? APP_URL : '#';
+    open.textContent = !online ? L.retry : isApp ? L.openApp : L.open;
+    open.className = 'btn ' + (isApp || !online ? 'primary' : 'soft');
+    var msg = $('msg');
+    msg.hidden = online && !justInstalled;
+    msg.textContent = !online ? L.offline : L.installed;
+    var showBtn = !!installPrompt && !justInstalled;
+    $('installBtn').hidden = !showBtn;
+    $('installBtn').textContent = L.install;
+    $('steps').hidden = showBtn || justInstalled;
+    $('stepsTitle').textContent = isIOS || isAndroid ? L.stepsTitle : L.stepsTitlePc;
+    $('stepsList').innerHTML = (isIOS ? L.ios : isAndroid ? L.android : L.desktop).map(function (s) { return '<li>' + s + '</li>'; }).join('');
+    $('stepsNote').textContent = L.stepsNote;
+  }
+
+  function launch() {
+    // Once for each start: coming back from the system shows the button instead of bouncing straight out again.
+    if (!isApp || navigator.onLine === false || (ss && store.get(ss, 'minds-opened'))) return;
+    if (ss) store.set(ss, 'minds-opened', '1');
+    var msg = $('msg');
+    msg.textContent = TEXT[lang].opening;
+    msg.hidden = false;
+    window.location.replace(APP_URL);
+  }
+
+  document.querySelectorAll('.lang button').forEach(function (b) {
+    b.onclick = function () { lang = b.dataset.lang; if (ls) store.set(ls, 'minds-lang', lang); render(); };
+  });
+  $('openBtn').addEventListener('click', function (e) {
+    if (navigator.onLine === false) { e.preventDefault(); window.location.reload(); }
+  });
+  $('installBtn').onclick = function () {
+    if (!installPrompt) return;
+    var p = installPrompt;
+    p.prompt();
+    p.userChoice.then(function (c) {
+      installPrompt = null;
+      if (c && c.outcome === 'accepted') justInstalled = true;
+      render();
+    });
+  };
+  window.addEventListener('beforeinstallprompt', function (e) { e.preventDefault(); installPrompt = e; render(); });
+  window.addEventListener('appinstalled', function () { installPrompt = null; justInstalled = true; render(); });
+  window.addEventListener('online', function () { render(); launch(); });
+  window.addEventListener('offline', render);
+  window.addEventListener('pageshow', render);
+
+  render();
+  launch();
+  if ('serviceWorker' in navigator) navigator.serviceWorker.register('sw.js').catch(function () {});
+})();
+</script>
+</body>
+</html>
