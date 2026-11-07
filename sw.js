@@ -1,6 +1,6 @@
 // Keeps this start page available offline, so the app can say it needs internet. It stores no student data and never touches the system itself.
-const CACHE = 'minds-app-v1';
-const FILES = ['./', './index.html', './config.js', './manifest.webmanifest', './icons/logo.svg', './icons/qr.png', './icons/icon-192.png', './icons/icon-512.png', './icons/icon-maskable-512.png', './icons/apple-touch-icon.png', './icons/favicon-32.png'];
+const CACHE = 'minds-app-v2';
+const FILES = ['./', './index.html', './config.js', './manifest.webmanifest', './lib/qrcode.min.js', './icons/logo.svg', './icons/icon-192.png', './icons/icon-512.png', './icons/icon-maskable-512.png', './icons/apple-touch-icon.png', './icons/favicon-32.png'];
 
 self.addEventListener('install', e => {
   e.waitUntil(caches.open(CACHE).then(c => c.addAll(FILES)).then(() => self.skipWaiting()));

@@ -42,7 +42,8 @@ h1 span{color:#E07A3C}
 .note{color:var(--muted);font-size:14px;margin:12px 0 0}
 .msg{background:var(--surface-2);border-radius:14px;padding:12px 14px;margin:0 0 12px;font-weight:700}
 .qr{display:none;margin-top:18px;border-top:1px solid var(--line);padding-top:16px}
-.qr img{width:150px;height:150px;display:block;margin:0 auto 6px;background:#fff;padding:6px;border-radius:10px}
+#qrCode{width:162px;margin:0 auto 6px;background:#fff;padding:6px;border-radius:10px;line-height:0}
+#qrCode img,#qrCode canvas{width:150px;height:150px;display:block}
 .qr p{margin:0;font-size:14px;color:var(--muted)}
 @media (min-width:760px) and (hover:hover){.qr{display:block}}
 [hidden]{display:none!important}
@@ -69,10 +70,11 @@ h1 span{color:#E07A3C}
   </div>
   <a class="btn soft" id="openBtn" href="#"></a>
   <p class="note" id="note"></p>
-  <div class="qr" id="qr"><img src="icons/qr.png" alt="" width="150" height="150"><p id="qrText"></p></div>
+  <div class="qr" id="qr"><div id="qrCode"></div><p id="qrText"></p></div>
   <noscript><p class="msg">Sila hidupkan JavaScript. / Please turn on JavaScript.</p></noscript>
 </main>
 <script src="config.js"></script>
+<script src="lib/qrcode.min.js"></script>
 <script>
 (function () {
   var TEXT = {
@@ -166,6 +168,9 @@ h1 span{color:#E07A3C}
   window.addEventListener('online', function () { render(); launch(); });
   window.addEventListener('offline', render);
   window.addEventListener('pageshow', render);
+
+  // The QR code always points to the address this page was opened on, so every copy of the site sends people to itself.
+  try { new QRCode($('qrCode'), { text: location.origin + location.pathname, width: 300, height: 300, colorDark: '#000000', colorLight: '#ffffff', correctLevel: QRCode.CorrectLevel.M }); } catch (e) { $('qr').hidden = true; }
 
   render();
   launch();
