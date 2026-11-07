@@ -129,7 +129,7 @@ You need a Google account for the school, ideally DELIMa or Google Workspace. **
 6. **Add students:** in **Import & eksport**, download the template, fill it in and upload it.
    - **CardID** must be exactly what the card's code contains, which is often not the number printed on the card.
    - **Never use IC or MyKid numbers.**
-7. **Add staff:** in **Pengguna / Users**, each new user gets a temporary password, shown once.
+7. **Add staff:** in **Pengguna / Users**, each new user gets a temporary password, shown once. Save an email for each counsellor and teacher, so **Lupa kata laluan** (Forgot password) can send them a code. Without one, the request goes to the administrator.
 8. **Print student cards** if needed: **Murid → Cetak kad**, printed at 100% scale.
 9. **Add kiosks** if the school uses them: **Kiosk → Tambah kiosk**.
 
